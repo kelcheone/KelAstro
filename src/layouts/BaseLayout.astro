@@ -1,0 +1,221 @@
+---
+import HeaderLink from "@components/HeaderLink.astro";
+import BaseHead from "../components/BaseHead.astro";
+import "@styles/global.css";
+import "@styles/index.css";
+import ThemeIcon from "@components/ThemeIcon.astro";
+import { Icon } from "astro-icon/components";
+import Footer from "@components/Footer.astro";
+
+const { title, description } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={title} description={description} />
+  </head>
+
+  <body>
+    <header>
+      <nav
+        class="px-5 h-16 flex justify-between items-center fixed top-0 left-0 right-0 z-[999] bg-base-100"
+      >
+        <icon class="icon px-3">
+          <Icon name="logo" size={100} />
+        </icon>
+
+        <label
+          aria-label="Hamburger Menu"
+          id="nav-toggle"
+          class="btn btn-circle swap swap-rotate fixed z-[999] top-4 right-4 hidden"
+          role="button"
+          aria-controls="primary-nav"
+          aria-expanded="false"
+          for="nav-toggle-input"
+        >
+          <input
+            type="checkbox"
+            id="nav-toggle-input"
+            class="hidden"
+            aria-hidden="true"
+            aria-label="Hamburger Menu"
+          />
+          <!-- hamburger icon -->
+          <svg
+            class="swap-off fill-current"
+            xmlns="http://www.w3.org/2000/svg"
+            width="32"
+            height="32"
+            viewBox="0 0 512 512"
+          >
+            <path
+              d="M64,384H448V341.33H64Zm0-106.67H448V234.67H64ZM64,128v42.67H448V128Z"
+            ></path>
+          </svg>
+          <!-- close icon -->
+          <svg
+            class="swap-on fill-current"
+            xmlns="http://www.w3.org/2000/svg"
+            width="32"
+            height="32"
+            viewBox="0 0 512 512"
+          >
+            <polygon
+              points="400 145.49 366.51 112 256 222.51 145.49 112 112 145.49 222.51 256 112 366.51 145.49 400 256 289.49 366.51 400 400 366.51 289.49 256 400 145.49"
+            ></polygon>
+          </svg>
+        </label>
+        <ul
+          class="flex grow gap-8 md:justify-end justify-center items-centerz-[100]"
+          data-visible="false"
+          id="primary-nav"
+        >
+          <li>
+            <HeaderLink href="/">
+              <p class="flex items-center justify-center gap-2 p-2">
+                <Icon name="home" size={30} class="inline-block" />
+                <span> Home </span>
+              </p>
+            </HeaderLink>
+          </li>
+          <li>
+            <HeaderLink href="/blog/">
+              <p class="flex items-center justify-center gap-2 p-2">
+                <Icon name="blog" size={30} class="inline-block" />
+                <span>Blog </span>
+              </p>
+            </HeaderLink>
+          </li>
+          <li>
+            <HeaderLink href="/search/">
+              <p class="flex items-center justify-center gap-2 p-2">
+                <Icon name="search" size={30} class="inline-block" />
+                <span>Search </span>
+              </p>
+            </HeaderLink>
+          </li>
+          <li>
+            <HeaderLink href="/tags/">
+              <p class="flex items-center justify-center gap-2 p-2">
+                <Icon name="tag" size={30} class="inline-block" />
+                <span>Tags </span>
+              </p>
+            </HeaderLink>
+          </li>
+          <li class="flex justify-start ml-4 items-center">
+            <ThemeIcon />
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <slot />
+    <Footer />
+
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      id="scrollButton"
+      viewBox="0 0 512 512"
+      class="w-10 h-10 fill-primary fixed bottom-5 right-5 animate-[jump_1500ms_infinite] cursor-pointer bg-base-100 rounded-full"
+      style="display: none"
+    >
+      <path
+        d="M256 0C114.6 0 0 114.6 0 256c0 141.4 114.6 256 256 256s256-114.6 256-256C512 114.6 397.4 0 256 0zM382.6 254.6c-12.5 12.5-32.75 12.5-45.25 0L288 205.3V384c0 17.69-14.33 32-32 32s-32-14.31-32-32V205.3L174.6 254.6c-12.5 12.5-32.75 12.5-45.25 0s-12.5-32.75 0-45.25l103.1-103.1C241.3 97.4 251.1 96 256 96c4.881 0 14.65 1.391 22.65 9.398l103.1 103.1C395.1 221.9 395.1 242.1 382.6 254.6z"
+      ></path>
+    </svg>
+    <style>
+      h2 {
+        margin: 0;
+        font-size: 1em;
+      }
+
+      h2 a,
+      h2 a.active {
+        text-decoration: none;
+      }
+      nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      nav a {
+        padding: 1em 0.5em;
+        color: var(--black);
+        text-decoration: none;
+      }
+      nav a.active {
+        text-decoration: none;
+        color: rgb(13, 134, 204);
+      }
+
+      nav a:hover {
+        color: rgb(13, 134, 204);
+      }
+
+      /* Mobile Navigation */
+      @media (max-width: 640px) {
+        ul#primary-nav {
+          position: fixed;
+          inset: 0 0 0 30%;
+          flex-direction: column;
+          padding: min(30vh, 10rem) 2em;
+          transform: translateX(100%);
+          transition: transform 500ms ease-in-out;
+          background: hsl(var(--hamburger-bg) / 0.5);
+          backdrop-filter: blur(2rem);
+        }
+
+        ul#primary-nav[data-visible="true"] {
+          transform: translateX(0);
+        }
+
+        label#nav-toggle {
+          display: grid;
+        }
+      }
+    </style>
+
+    <script>
+      // Hamburger Menu - control
+      const nav = document.querySelector<HTMLUListElement>("#primary-nav");
+      const navToggle = document.querySelector<HTMLLabelElement>("#nav-toggle");
+      const navToggleInput =
+        document.querySelector<HTMLInputElement>("#nav-toggle input");
+
+      navToggle?.addEventListener("change", () => {
+        if (nav?.getAttribute("data-visible") === "false") {
+          nav?.setAttribute("data-visible", "true");
+          nav?.setAttribute("aria-expanded", "true");
+        } else if (nav?.getAttribute("data-visible") === "true") {
+          nav?.setAttribute("data-visible", "false");
+          nav?.setAttribute("aria-expanded", "false");
+        }
+      });
+
+      document.querySelector("main")?.addEventListener("click", () => {
+        if (nav?.getAttribute("data-visible") === "true") {
+          nav?.setAttribute("data-visible", "false");
+          nav?.setAttribute("aria-expanded", "false");
+          if (navToggleInput) navToggleInput.checked = !navToggleInput.checked;
+        }
+      });
+
+      // Scroll To Top button - control
+      const scrollButton = document.querySelector<SVGElement>("#scrollButton");
+      scrollButton?.addEventListener("click", () => {
+        window.scroll({
+          top: 0,
+          left: 0,
+          behavior: "smooth",
+        });
+      });
+      window.addEventListener("scroll", () => {
+        if (document.documentElement.scrollTop > window.innerHeight / 4) {
+          if (scrollButton) scrollButton.style.display = "block";
+        } else {
+          if (scrollButton) scrollButton.style.display = "none";
+        }
+      });
+    </script>
+  </body>
+</html>

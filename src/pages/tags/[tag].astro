@@ -1,0 +1,55 @@
+---
+import ArticleCard from "@components/ArticleCard.astro";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const allPosts = await getCollection("blog", ({ data }) => {
+    return data.draft !== true;
+  });
+
+  let uniqueTags = [...new Set(allPosts.map((post) => post.data.tags).flat())];
+
+  uniqueTags = uniqueTags.filter((tag) => tag);
+
+  return uniqueTags.map((tag) => {
+    const filteredPosts = allPosts.filter((post) =>
+      post.data.tags?.includes(tag as string)
+    );
+    return {
+      params: { tag },
+      props: { posts: filteredPosts },
+    };
+  });
+}
+
+const { tag } = Astro.params;
+const { posts } = Astro.props;
+---
+
+<BaseLayout
+  title={`Posts tagged with ${tag}`}
+  description={`Posts tagged with ${tag}`}
+>
+  <main class="mt-24 flex flex-col gap-2 p-4">
+    <h1
+      class="text-center text-3xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-pink-600"
+    >
+      Posts tagged with {tag}
+    </h1>
+    <ul class="flex flex-col gap-3">
+      {
+        posts.map((post) => (
+          <ArticleCard
+            key={post.id}
+            title={post.data.title}
+            description={post.data.description}
+            slug={post.slug}
+            tags={post.data.tags}
+            heroImage={post.data.heroImage}
+          />
+        ))
+      }
+    </ul>
+  </main>
+</BaseLayout>

@@ -1,0 +1,11 @@
+:root {
+  --theme-bg: #f0f0f0;
+  --theme-color: #333;
+  --theme-selection-color: #fff;
+  --theme-selection-bg: #df0fabf5;
+}
+
+::selection {
+  color: var(--theme-selection-color);
+  background-color: var(--theme-selection-bg);
+}

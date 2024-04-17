@@ -1,0 +1,48 @@
+---
+import TagButton from "@components/TagButton.astro";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const allPosts = await getCollection("blog", ({ data }) => {
+  return data.draft !== true;
+});
+let tags = allPosts.map((post) => post.data.tags).flat();
+
+tags = tags.filter((tag) => tag !== undefined);
+const uniqueTags = [...new Set(tags)];
+const pageTitle = "Tag Index";
+---
+
+<BaseLayout title={pageTitle} description="A list of all tags used in the blog">
+  <main class="mt-24">
+    <h1
+      class="text-center text-3xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-br from-orange-500 to-pink-600 mt-8"
+    >
+      All Tags
+    </h1>
+
+    <div class="flex flex-wrap justify-center gap-2">
+      {uniqueTags.map((tag) => <TagButton tagName={tag} />)}
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  a {
+    color: #00539f;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    margin: 0.25em;
+    border: dotted 1px #a1a1a1;
+    border-radius: 0.5em;
+    padding: 0.5em 1em;
+    font-size: 1.15em;
+    background-color: #f8fcfd;
+  }
+</style>

@@ -1,0 +1,91 @@
+---
+import type { CollectionEntry } from "astro:content";
+import BaseHead from "../components/BaseHead.astro";
+import FormattedDate from "../components/FormattedDate.astro";
+import Image from "astro/components/Image.astro";
+import TableOfContents from "@components/TableOfContents.astro";
+
+import "../styles/global.css";
+import "@styles/index.css";
+import BaseLayout from "./BaseLayout.astro";
+import type { MarkdownHeading } from "astro";
+
+type Props = CollectionEntry<"blog">["data"];
+
+const { title, description, pubDate, updatedDate, heroImage, author } =
+  Astro.props;
+const { headings } = Astro.props;
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  keywords={["keywords", "go", "here"]}
+  image={heroImage}
+>
+  <head>
+    <BaseHead title={title} description={description} />
+  </head>
+
+  <body>
+    <main class="mt-16 grid md:grid-cols-5 grid-cols-1">
+      <article
+        class="prose md:prose-lg 2xl:prose-xl px-4 mx-auto prose-pre:font-mono col-span-4 w-full"
+      >
+        <div class="rounded-full flex justify-center items-center mt-2">
+          {
+            heroImage && (
+              <Image
+                width={1020}
+                height={510}
+                src={heroImage}
+                alt={description}
+                class="rounded-lg"
+                loading="eager"
+              />
+            )
+          }
+        </div>
+        <div class="">
+          <div class="flex flex-row justify-evenly items-center">
+            <div class="flex flex-col text-sm text-start gap-2">
+              <FormattedDate date={pubDate} />
+              {
+                updatedDate && (
+                  <div class="text-sm  text-center">
+                    Last updated on <FormattedDate date={updatedDate} />
+                  </div>
+                )
+              }
+            </div>
+            <div class="">
+              <div class="flex flex-row items-center">
+                <Image
+                  width={40}
+                  height={40}
+                  src="https://avatars.githubusercontent.com/u/1024025?v=4"
+                  alt="author"
+                  class="rounded-full w-10 h-10"
+                  loading="eager"
+                  format="avif"
+                />
+                <div class="text-sm text-center ml-2">{author}</div>
+              </div>
+            </div>
+          </div>
+          <h1 class="text-5xl text-center pb-2">{title}</h1>
+          <hr />
+        </div>
+
+        <slot />
+      </article>
+      <aside
+        class="hidden md:block col-span-1 sticky top-16"
+        style="max-height: calc(100vh - 4rem);"
+      >
+        <h2 class="text-2xl font-bold">Table of Contents</h2>
+        <TableOfContents headings={headings as MarkdownHeading[]} />
+      </aside>
+    </main>
+  </body>
+</BaseLayout>

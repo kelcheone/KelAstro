@@ -1,0 +1,70 @@
+:root {
+  --astro-code-color-text: rgb(242, 245, 237);
+  --astro-code-color-background: rgb(35, 19, 71);
+  --astro-code-token-constant: plum;
+  --astro-code-token-string: purple;
+  --astro-code-token-comment: tomato;
+  --astro-code-token-keyword: darkslategrey;
+  --astro-code-token-parameter: coral;
+  --astro-code-token-function: green;
+  --astro-code-token-string-expression: chartreuse;
+  --astro-code-token-punctuation: gray;
+  --astro-code-token-link: firebrick;
+  --astro-code-token-operator: white;
+  --astro-code-token-boolean: darkorange;
+  --astro-code-token-regex: darkorchid;
+  --astro-code-token-number: darkturquoise;
+  --astro-code-token-attribute: darkgoldenrod;
+  --astro-code-token-tag: darkgreen;
+}
+
+/* target the class header */
+
+.header {
+  background-color: rgb(17, 4, 75) !important;
+  color: var(--astro-code-color-text);
+  font-family: "Fira Code", monospace;
+  border-radius: 0, 0, 1.5rem, 1.5rem;
+}
+
+/* change the bakcground of + and - added using ::before */
+.line.del::before {
+  background-color: rgba(255, 0, 0, 0.2) !important;
+  color: rgb(206, 9, 9) !important;
+  width: 100%;
+}
+.line.ins::before {
+  background-color: rgba(0, 255, 0, 0.2) !important;
+  color: greenyellow !important;
+  width: 100%;
+}
+
+pre {
+  background-color: var(--astro-code-color-background);
+  color: var(--astro-code-color-text);
+  padding: 1rem;
+  border-radius: 0.2rem !important;
+  margin: 1rem 0;
+}
+
+/* target the class="line mark" */
+.line.mark {
+  background-color: rgba(0, 0, 255, 0.2) !important;
+}
+
+/* target the class "astro-code" */
+.astro-code {
+  background-color: var(--astro-code-color-background);
+  color: var(--astro-code-color-text);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+}
+
+.copy-button {
+  color: rgb(50, 135, 205) !important;
+}
+
+.copy-button-tooltip.copy-button-tooltip-visible {
+  color: greenyellow !important;
+}

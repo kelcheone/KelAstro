@@ -1,0 +1,56 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+
+import { getCollection } from "astro:content";
+import Paginate from "@components/Paginate.astro";
+import ArticleCard from "@components/ArticleCard.astro";
+
+export async function getStaticPaths({ paginate }: { paginate: any }) {
+  const posts = await getCollection("blog", ({ data }) => {
+    return data.draft !== true;
+  });
+
+  return paginate(posts, {
+    pageSize: 5,
+  });
+}
+
+const { page } = Astro.props as unknown as any;
+
+const data = page.data.map((post: any) => ({
+  id: post.id,
+  slug: post.slug,
+  tags: post.tags,
+  ...post.data,
+}));
+---
+
+<BaseLayout title={"Blog"} description={"Blog"}>
+  <div class="flex justify-center items-center flex-col w-full p-3 mt-24">
+    {
+      page.start == 0 && (
+        <h1 class="text-center text-3xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-pink-600">
+          Recent Articles
+        </h1>
+      )
+    }
+
+    <ul class="flex flex-wrap flex-col justify-center gap-3">
+      {
+        data.map((post: any) => (
+          <ArticleCard
+            key={post.id}
+            title={post.title}
+            description={post.description}
+            slug={post.slug}
+            tags={post.tags}
+            heroImage={post.heroImage}
+            route="/blog"
+          />
+        ))
+      }
+    </ul>
+
+    <Paginate page={page} dir="blog" />
+  </div>
+</BaseLayout>
