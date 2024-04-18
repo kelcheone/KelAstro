@@ -1,9 +1,10 @@
 ---
-import ArticleCard from "@components/ArticleCard.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
+import ArticleCard from "@components/ArticleCard.astro";
+import PaginateTags from "@components/PaginateTags.astro";
 
-export async function getStaticPaths() {
+export async function getStaticPaths({ paginate }: { paginate: Function }) {
   const allPosts = await getCollection("blog", ({ data }) => {
     return data.draft !== true;
   });
@@ -12,19 +13,27 @@ export async function getStaticPaths() {
 
   uniqueTags = uniqueTags.filter((tag) => tag);
 
-  return uniqueTags.map((tag) => {
+  return uniqueTags.flatMap((tag) => {
     const filteredPosts = allPosts.filter((post) =>
       post.data.tags?.includes(tag as string)
     );
-    return {
+
+    return paginate(filteredPosts, {
       params: { tag },
-      props: { posts: filteredPosts },
-    };
+      pageSize: 5,
+    });
   });
 }
 
+const { page } = Astro.props;
 const { tag } = Astro.params;
-const { posts } = Astro.props;
+
+const data = page.data.map((post: any) => ({
+  id: post.id,
+  slug: post.slug,
+  tags: post.tags,
+  ...post.data,
+}));
 ---
 
 <BaseLayout
@@ -39,17 +48,21 @@ const { posts } = Astro.props;
     </h1>
     <ul class="flex flex-col gap-3">
       {
-        posts.map((post) => (
+        data.map((post: any) => (
           <ArticleCard
             key={post.id}
-            title={post.data.title}
-            description={post.data.description}
+            title={post.title}
+            description={post.description}
             slug={post.slug}
-            tags={post.data.tags}
-            heroImage={post.data.heroImage}
+            tags={post.tags}
+            heroImage={post.heroImage}
+            route="/blog"
           />
         ))
       }
     </ul>
+    <div class="flex justify-center items-center">
+      <PaginateTags page={page} dir={tag.toString()} />
+    </div>
   </main>
 </BaseLayout>
